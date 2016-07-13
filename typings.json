@@ -1,0 +1,8 @@
+{
+  "name": "random-quotes",
+  "dependencies": {},
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20160621231320",
+    "react": "registry:dt/react#0.14.0+20160630100702"
+  }
+}

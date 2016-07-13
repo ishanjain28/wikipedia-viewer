@@ -1,0 +1,38 @@
+{
+  "name": "wikipedia-viewer",
+  "version": "1.0.0",
+  "description": "Wikipedia Viewer built in React",
+  "main": "index.js",
+  "start": "node server.js",
+  "scripts": {
+    "watch": "watchify -v -t reactify src/index.jsx -o dist/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishanjain28/wikipedia-viewer.git"
+  },
+  "keywords": [
+    "react",
+    "wikipedia",
+    "browserify"
+  ],
+  "author": "Ishan Jain <ishanjain28@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ishanjain28/wikipedia-viewer/issues"
+  },
+  "homepage": "https://github.com/ishanjain28/wikipedia-viewer#readme",
+  "devDependencies": {
+    "eslint": "^3.0.1",
+    "eslint-plugin-react": "^5.2.2",
+    "express": "^4.14.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "reactify": "^1.1.1"
+  },
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
+  }
+}
