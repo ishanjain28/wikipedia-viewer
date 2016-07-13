@@ -30379,25 +30379,173 @@ module.exports = require('./lib/React');
 var React = require('react');
 var $ = require('jquery');
 
+const RandomArticle = React.createClass({displayName: "RandomArticle",
+    render: function () {
+        return (
+            React.createElement("a", {target: "_blank", href: "https://en.wikipedia.org/wiki/Special:Random", className: "RandomArticle"}, 
+                "Random Article"
+            )
+        );
+    }
+});
+
+const SearchBar = React.createClass({displayName: "SearchBar",
+    getInitialState: function () {
+        return {
+            searchText: ''
+        }
+    },
+    handleChange: function (e) {
+        this.setState({
+            searchText: e.target.value
+        });
+        this.props.getSearchText(e.target.value);
+    },
+    render: function () {
+        return (
+            React.createElement("div", {className: "SearchBar"}, 
+                React.createElement("input", {
+                    placeholder: "Enter Search Term", 
+                    type: "text", 
+                    value: this.state.searchText, 
+                    onChange: this.handleChange, 
+                    className: "SearchTextInput", 
+                    onKeyUp: this.props.handleEnter}
+                    ), 
+                React.createElement("a", {onClick: this.props.getResultsList, className: "SearchButtonLink"}, 
+                    React.createElement("i", {className: "fa fa-search fa-2x searchButton"})
+                )
+            )
+        )
+    }
+});
+const ResultsList = React.createClass({displayName: "ResultsList",
+    render: function () {
+        var data = [];
+        var LIST = [];
+
+        if (this.props.data) {
+            data = this.props.data;
+
+            for (var key in data) {
+                var pageid = data[key].pageid;
+
+                LIST.push(
+                    React.createElement("li", {id: pageid, key: pageid, className: "Result"}, 
+                        React.createElement("a", {href: "https://en.wikipedia.org/?curid=" + pageid, target: "_blank", className: "wikiLink"}, 
+                            React.createElement("p", {className: "ResultTitle"}, data[key].title), 
+                            React.createElement("p", {className: "ResultExtract"}, data[key].extract)
+                        )
+                    )
+                );
+            }
+        }
+        return (
+            React.createElement("ul", {className: "ResultsList"}, 
+                LIST
+            )
+        );
+    }
+});
 
 const App = React.createClass({displayName: "App",
+    getInitialState: function () {
+        return {
+            query: '',
+            data: []
+        }
+    },
+    getSearchText: function (q) {
+        var query = q.split(" ").join("%20");
+        this.setState({
+            query: query
+        });
+    },
+    handleEnterPress: function (key) {
+        var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
+        var url = add + this.state.query;
+        if (key.which == 13) {
+            $.ajax({
+                url: url,
+                dataType: 'jsonp',
+                cache: 'true',
+                success: function (data) {
+                    this.setState({
+                        data: data.query.pages
+                    });
+                    console.log(data.query.pages[2256889]);
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.log(url, err.toString());
+                }.bind(this)
+            });
+        }
+    },
+    getResultsList: function () {
+        var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
+        var url = add + this.state.query;
+        if (this.state.query) {
+            $.ajax({
+                url: url,
+                dataType: 'jsonp',
+                cache: 'true',
+                success: function (data) {
+                    this.setState({
+                        data: data.query.pages
+                    });
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.log(url, err.toString());
+                }.bind(this)
+            });
+        }
+    },
+    render: function () {
+        return (
+            React.createElement("div", {className: "App"}, 
+                React.createElement(SearchBar, {
+                    getSearchText: this.getSearchText, 
+                    handleEnter: this.handleEnterPress, 
+                    getResultsList: this.getResultsList}
+                    ), 
+                React.createElement(RandomArticle, null), 
+                React.createElement(ResultsList, {data: this.state.data})
+            )
+        )
+    }
+});
+const Footer = React.createClass({displayName: "Footer",
+    render: function () {
+        return (
+            React.createElement("div", {className: "footerWrapper"}, 
+                React.createElement("div", {className: "footer"}, 
+                    React.createElement("a", {href: "https://github.com/ishanjain28/wikipedia-viewer"}, "Github"), 
+                    React.createElement("a", {href: "mailto:ishanjain28@gmail.com"}, "Contact"), 
+                    React.createElement("a", {href: "https://twitter.com/ishanjain28"}, "Twitter")
+                )
+            )
+        );
+    }
+});
+const AppContainer = React.createClass({displayName: "AppContainer",
     render: function () {
         return (
             React.createElement("div", {className: "AppRoot"}, 
-                "God damn it!"
+                React.createElement(App, null), 
+                React.createElement(Footer, null)
             )
         )
     }
 });
 
-module.exports = App;
+module.exports = AppContainer;
 
 },{"jquery":27,"react":171}],173:[function(require,module,exports){
 var ReactDOM = require('react-dom');
 var React = require('react');
-var App = require('./App.jsx');
+var AppContainer = require('./App.jsx');
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+ReactDOM.render(React.createElement(AppContainer, null), document.getElementById('root'));
 
 },{"./App.jsx":172,"react":171,"react-dom":29}],174:[function(require,module,exports){
 // shim for using process in browser
