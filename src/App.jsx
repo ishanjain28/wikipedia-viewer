@@ -3,61 +3,61 @@ const $ = require('jquery');
 
 
 const RandomArticle = React.createClass({
-  render: function() {
+  render: function () {
     return (
       <a target="_blank" href="https://en.wikipedia.org/wiki/Special:Random" className="RandomArticle">
-                Random Article
-            </a>
+        Random Article
+      </a>
     );
   }
 });
 
 const SearchBar = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       searchText: ''
-      }
+    }
   },
-  handleChange: function(e) {
+  handleChange: function (e) {
     this.setState({
       searchText: e.target.value
     });
     this.props.getSearchText(e.target.value);
   },
-  render: function() {
-    $(document).ready(function()  {
-      $('.Search').on('click', function() {
+  render: function () {
+    $(document).ready(function () {
+      $('.Search').on('click', function () {
         $(this).slideUp('fast');
         $('.SearchBarExtended').show('slow');
         $('.SearchTextInput').focus();
       });
-        
+
     });
     return (
 
       <div className="SearchBar">
         <div className="SearchBarExtended">
-                <input
-                    placeholder="Enter Search Term"
-                    type="text"
-                    value={this.state.searchText}
-                    onChange={this.handleChange}
-                    className="SearchTextInput"
-                    onKeyUp={this.props.handleEnter}
-                />
-                <a onClick={this.props.getResultsList} className="SearchButtonLink">
-                    <i className="fa fa-search fa-2x searchButton"></i>
-                </a>
-     </div>
-      <div className = "Search">
-      <i className="fa fa-search fa-3x"></i>
-      </div> 
+          <input
+            placeholder="Enter Search Term"
+            type="text"
+            value={this.state.searchText}
+            onChange={this.handleChange}
+            className="SearchTextInput"
+            onKeyUp={this.props.handleEnter}
+            />
+          <a onClick={this.props.getResultsList} className="SearchButtonLink">
+            <i className="fa fa-search fa-2x searchButton"></i>
+          </a>
+        </div>
+        <div className = "Search">
+          <i className="fa fa-search fa-3x"></i>
+        </div>
       </div>
     )
   }
 });
 const ResultsList = React.createClass({
-  render: function() {
+  render: function () {
     var data = [];
     var LIST = [];
 
@@ -69,36 +69,36 @@ const ResultsList = React.createClass({
 
         LIST.push(
           <li id={pageid} key={pageid} className="Result">
-                        <a href={"https://en.wikipedia.org/?curid=" + pageid} target="_blank" className="wikiLink">
-                            <p className="ResultTitle">{data[key].title}</p>
-                            <p className="ResultExtract">{data[key].extract}</p>
-                        </a>
-                    </li>
+            <a href={"https://en.wikipedia.org/?curid=" + pageid} target="_blank" className="wikiLink">
+              <p className="ResultTitle">{data[key].title}</p>
+              <p className="ResultExtract">{data[key].extract}</p>
+            </a>
+          </li>
         );
       }
     }
     return (
       <ul className= "ResultsList" >
-                {LIST}
-            </ul >
+        {LIST}
+      </ul >
     );
   }
 });
 
 const App = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       query: '',
       data: []
     }
   },
-  getSearchText: function(q) {
+  getSearchText: function (q) {
     var query = q.split(" ").join("%20");
     this.setState({
       query: query
     });
   },
-  handleEnterPress: function(key) {
+  handleEnterPress: function (key) {
     var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
     var url = add + this.state.query;
     if (key.which == 13) {
@@ -106,19 +106,19 @@ const App = React.createClass({
         url: url,
         dataType: 'jsonp',
         cache: 'true',
-        success: function(data) {
+        success: function (data) {
           this.setState({
             data: data.query.pages
           });
           $('.ResultsList').show('slow');
         }.bind(this),
-        error: function(xhr, status, err) {
+        error: function (xhr, status, err) {
           console.log(url, err.toString());
         }.bind(this)
       });
     }
   },
-  getResultsList: function() {
+  getResultsList: function () {
     var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
     var url = add + this.state.query;
     if (this.state.query) {
@@ -126,52 +126,52 @@ const App = React.createClass({
         url: url,
         dataType: 'jsonp',
         cache: 'true',
-        success: function(data) {
+        success: function (data) {
           this.setState({
             data: data.query.pages
           });
           $('.ResultsList').show('slow');
         }.bind(this),
-        error: function(xhr, status, err) {
+        error: function (xhr, status, err) {
           console.log(url, err.toString());
         }.bind(this)
       });
     }
   },
-  render: function() {
+  render: function () {
     return (
       <div className="App">
-                <SearchBar
-                    getSearchText={this.getSearchText}
-                    handleEnter={this.handleEnterPress}
-                    getResultsList={this.getResultsList}
-                    />
-                <RandomArticle />
-                <ResultsList data={this.state.data} />
-            </div>
+        <SearchBar
+          getSearchText={this.getSearchText}
+          handleEnter={this.handleEnterPress}
+          getResultsList={this.getResultsList}
+          />
+        <RandomArticle />
+        <ResultsList data={this.state.data} />
+      </div>
     )
   }
 });
 const Footer = React.createClass({
-  render: function() {
+  render: function () {
     return (
       <div className="footerWrapper">
-                <div className="footer">
-                    <a href="https://github.com/ishanjain28/wikipedia-viewer">Github</a>
-                    <a href="mailto:ishanjain28@gmail.com">Contact</a>
-                    <a href="https://twitter.com/ishanjain28">Twitter</a>
-                </div>
-            </div>
+        <div className="footer">
+          <a href="https://github.com/ishanjain28/wikipedia-viewer">Github</a>
+          <a href="mailto:ishanjain28@gmail.com">Contact</a>
+          <a href="https://twitter.com/ishanjain28">Twitter</a>
+        </div>
+      </div>
     );
   }
 });
 const AppContainer = React.createClass({
-  render: function() {
+  render: function () {
     return (
       <div className="AppRoot">
-                <App />
-                <Footer />
-            </div>
+        <App />
+        <Footer />
+      </div>
     )
   }
 });
