@@ -30406,7 +30406,7 @@ const SearchBar = React.createClass({displayName: "SearchBar",
     $(document).ready(function () {
       $('.Search').on('click', function () {
         $(this).slideUp('fast');
-        $('.SearchBarExtended').show('fast');
+        $('.SearchBarExtended').show('slow');
         $('.SearchTextInput').focus();
       });
 
@@ -30477,7 +30477,7 @@ const App = React.createClass({displayName: "App",
     });
   },
   handleEnterPress: function (key) {
-    var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=20&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
+    var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
     var url = add + this.state.query;
     if (key.which == 13) {
       $.ajax({
@@ -30497,7 +30497,7 @@ const App = React.createClass({displayName: "App",
     }
   },
   getResultsList: function () {
-    var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=20&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
+    var add = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
     var url = add + this.state.query;
     if (this.state.query) {
       $.ajax({
